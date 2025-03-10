@@ -1,0 +1,31 @@
+services:
+  fastapi-app:
+    build: ./fastapi-app
+    ports:
+      - "8000:8000"
+    env_file:                    # ← 追加 (バックエンド側の.envを参照)
+      - ./fastapi-app/.env
+    depends_on:
+      - db
+
+  nextjs-app:
+    build: ./nextjs-app
+    ports:
+      - "3000:3000"
+    env_file:                    # ← 任意 (フロントの.env.localを参照したい場合)
+      - ./nextjs-app/.env.local
+
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
