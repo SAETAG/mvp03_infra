@@ -1,9 +1,10 @@
+version: '3'
 services:
   fastapi-app:
     build: ./fastapi-app
     ports:
       - "8000:8000"
-    env_file:                    # ← 追加 (バックエンド側の.envを参照)
+    env_file:
       - ./fastapi-app/.env
     depends_on:
       - db
@@ -12,7 +13,7 @@ services:
     build: ./nextjs-app
     ports:
       - "3000:3000"
-    env_file:                    # ← 任意 (フロントの.env.localを参照したい場合)
+    env_file:
       - ./nextjs-app/.env.local
 
   db:
@@ -26,6 +27,14 @@ services:
       - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@example.com"
+      PGADMIN_DEFAULT_PASSWORD: "adminpassword"
+    ports:
+      - "5050:80"
 
 volumes:
   db-data:
